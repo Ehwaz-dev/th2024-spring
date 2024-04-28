@@ -19,6 +19,13 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
+            'about' => $this->about,
+            'articles' => ArticleResource::collection($this->articles),
+            'events' => [
+                'active' => EventResource::collection($this->activeEvents),
+                'passed' => EventResource::collection($this->passedEvents)
+            ],
+
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

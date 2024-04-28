@@ -22,14 +22,19 @@ class EventResource extends JsonResource
                 'start' => $this->start,
                 'end' => $this->end,
             ],
-            'maxUsers' => $this->users,
+            'owner' => [
+                'id' => $this->owner->id,
+                'name' => $this->owner->name,
+            ],
+            'maxUsers' => $this->max_users,
             'places' => $this->places,
             'tags' => $this->tags,
             'likes' => [
                 'count' => $this->likes_count
             ],
             'comments' => [
-                'count' => $this->comments_count
+                'count' => $this->comments_count,
+                'list' => $this->comments,
             ]
         ];
     }

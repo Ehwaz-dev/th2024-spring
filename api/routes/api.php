@@ -34,3 +34,14 @@ Route::resource('articles', \App\Http\Controllers\Api\ArticleController::class)-
     'show',
     'destroy',
 ]);
+Route::prefix('articles')->group(function () {
+    Route::post('/{slug}/like', [\App\Http\Controllers\Api\ArticleController::class, 'like']);
+    Route::post('/{slug}/comment', [\App\Http\Controllers\Api\ArticleController::class, 'comment']);
+});
+
+Route::resource('users', \App\Http\Controllers\Api\UserController::class)->only([
+    'update',
+    'show',
+]);
+
+Route::get('/places', [\App\Http\Controllers\Api\PlacesController::class, 'search']);

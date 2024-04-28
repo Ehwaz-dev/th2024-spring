@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->bigInteger('commented_id');
             $table->string('commented_type');
+            $table->string('comment');
             $table->jsonb('attachments')->default("[]");
             $table->timestamps();
         });

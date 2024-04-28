@@ -71,22 +71,27 @@ class EventController extends Controller
             $dateArr = mb_split(",", $request->query('date'));
 
             if (count($dateArr) == 2) {
-                $dateQ = [
-                    [
+                $dateQ = [];
+
+                if ($dateArr[0] != "null") {
+                    $dateQ[] = [
                         'range' => [
                             'start' => [
                                 'gte' => $dateArr[0],
                             ],
                         ]
-                    ],
-                    [
+                    ];
+                }
+
+                if ($dateArr[1] != "null") {
+                    $dateQ[] = [
                         'range' => [
                             'end' => [
                                 'lte' => $dateArr[1]
                             ],
                         ]
-                    ],
-                ];
+                    ];
+                }
 
                 $elasticQ['bool']['must'] = $dateQ;
             }
@@ -96,6 +101,7 @@ class EventController extends Controller
             ->load(['owner', 'tags'])
             ->execute()
             ->models()
+            ->take($request->query('limit', 20))
             ->loadCount(['likes', 'comments']);
 
         return EventResource::collection($eventsElastic);

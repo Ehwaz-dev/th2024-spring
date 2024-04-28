@@ -25,7 +25,8 @@ class ArticleResource extends JsonResource
                 'count' => $this->likes_count
             ],
             'comments' => [
-                'count' => $this->comments_count
+                'count' => $this->comments_count,
+                'list' => $this->comments
             ]
         ];
     }

@@ -64,7 +64,7 @@ class Event extends Model
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commented');
+        return $this->morphMany(Comment::class, 'commented')->orderBy('created_at', 'desc');
     }
 
     public function likes()

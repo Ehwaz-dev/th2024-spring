@@ -3,63 +3,54 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\User\UpdateRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        //
+        $user->load([
+            'articles' => fn($q) => $q->take(20)
+                ->with(['comments' => fn($q) => $q->take(3)])
+                ->withCount(['likes', 'comments']),
+            'activeEvents' => fn($q) => $q->take(3)
+                ->with(['tags'])
+                ->withCount(['likes', 'comments']),
+            'passedEvents' => fn($q) => $q->orderBy('end', 'desc')
+                ->take(3)
+                ->with('tags')
+                ->withCount(['likes', 'comments']),
+        ]);
+        return UserResource::make($user);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, User $user)
     {
-        //
-    }
+        $user->update($request->validated());
+        $user->load([
+            'articles' => fn($q) => $q->take(20)
+                ->with('comments')
+                ->withCount(['likes', 'comments']),
+            'activeEvents' => fn($q) => $q->take(3)
+                ->with(['tags'])
+                ->withCount(['likes', 'comments']),
+            'passedEvents' => fn($q) => $q->orderBy('end', 'desc')
+                ->take(3)
+                ->with('tags')
+                ->withCount(['likes', 'comments']),
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return UserResource::make($user);
     }
 }

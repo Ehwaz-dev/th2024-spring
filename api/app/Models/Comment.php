@@ -14,6 +14,7 @@ class Comment extends Model
         'user_id',
         'commented_id',
         'commented_type',
+        'comment',
         'attachments',
     ];
 
